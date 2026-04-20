@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinyCopyServer | Public Archive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Space+Grotesk:wght@500;700&family=Onest:wght@400;500;600;700&family=Noto+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --c1: #355872;
+            --c2: #7AAACE;
+            --c3: #9CD5FF;
+            --c4: #F7F8F0;
+
+            --radius-card: 36px;
+            --radius-inner: 12px;
+            --radius-panel: 24px;
+            --radius-pill: 9999px;
+
+            --text-hero: clamp(64px, 8vw, 110px);
+            --text-h1: clamp(36px, 4vw, 64px);
+            --text-h2: clamp(28px, 3vw, 44px);
+            --text-h3: clamp(22px, 2.5vw, 32px);
+            --text-large: 22px;
+            --text-medium: 18px;
+            --text-base: 15px;
+            --text-small: 13px;
+            --text-xs: 11px;
+            --text-code: 13px;
+
+            --ease-hover: ease;
+            --ease-in-anim: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-dur: 600ms;
+            --ease-out-anim: cubic-bezier(0.7, 0, 0.84, 0);
+            --ease-out-dur: 600ms;
+            --ease-inout-anim: cubic-bezier(1, 0, 0, 1);
+            --ease-inout-dur: 900ms;
+            --spring-snap: linear(
+                0, 0.029 0.8%, 0.13 1.8%, 0.908 7.2%, 1.051 9.1%,
+                1.112 11.2%, 1.116 12.2%, 1.106 13.4%, 1.007 19.5%,
+                0.987 23.1%, 1.001 35%, 1
+            );
+            --spring-snap-dur: 950ms;
+            --spring-general: linear(
+                0, 0.009 1.4%, 0.032 2.8%, 0.131 6%, 0.265 9.1%,
+                0.675 17.6%, 0.88 22.8%, 0.953 25.2%, 1.014 27.7%,
+                1.062 30.3%, 1.094 32.9%, 1.121 37.2%, 1.121 42.2%,
+                1.102 46.7%, 1.019 61.2%, 0.989 71.5%, 0.985 81.1%, 1
+            );
+            --spring-general-dur: 650ms;
+
+            --page-bg: color-mix(in srgb, var(--c4) 92%, white 8%);
+            --surface-1: var(--c4);
+            --surface-2: color-mix(in srgb, var(--c4) 82%, var(--c3) 18%);
+            --surface-3: color-mix(in srgb, var(--c4) 70%, var(--c3) 30%);
+            --panel-dark: var(--c1);
+            --panel-mid: color-mix(in srgb, var(--c1) 84%, var(--c2) 16%);
+            --border-soft: color-mix(in srgb, var(--c2) 30%, var(--c4) 70%);
+            --border-strong: color-mix(in srgb, var(--c1) 32%, var(--c3) 68%);
+            --text-primary: var(--c1);
+            --text-secondary: color-mix(in srgb, var(--c1) 72%, var(--c2) 28%);
+            --text-tertiary: color-mix(in srgb, var(--c1) 48%, var(--c4) 52%);
+            --text-inverse: var(--c4);
+            --accent: var(--c3);
+            --accent-strong: color-mix(in srgb, var(--c3) 72%, var(--c2) 28%);
+            --shadow-card: 0 2px 12px rgba(53, 88, 114, 0.08);
+            --shadow-toolbar: 0 4px 20px rgba(53, 88, 114, 0.12);
+        }
+
+        html.dark-mode {
+            --page-bg: color-mix(in srgb, var(--c1) 94%, black 6%);
+            --surface-1: color-mix(in srgb, var(--c1) 91%, var(--c2) 9%);
+            --surface-2: color-mix(in srgb, var(--c1) 84%, var(--c2) 16%);
+            --surface-3: color-mix(in srgb, var(--c1) 76%, var(--c2) 24%);
+            --panel-dark: color-mix(in srgb, var(--c1) 95%, black 5%);
+            --panel-mid: color-mix(in srgb, var(--c1) 76%, var(--c2) 24%);
+            --border-soft: color-mix(in srgb, var(--c3) 18%, var(--c1) 82%);
+            --border-strong: color-mix(in srgb, var(--c3) 32%, var(--c1) 68%);
+            --text-primary: var(--c4);
+            --text-secondary: color-mix(in srgb, var(--c4) 74%, var(--c2) 26%);
+            --text-tertiary: color-mix(in srgb, var(--c4) 42%, var(--c2) 58%);
+            --text-inverse: var(--c1);
+            --shadow-card: none;
+            --shadow-toolbar: none;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Onest', sans-serif;
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            background: var(--page-bg);
+            line-height: 1.5;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        body::before {
+            background:
+                radial-gradient(circle at 8% 12%, color-mix(in srgb, var(--c3) 24%, transparent) 0, transparent 32%),
+                radial-gradient(circle at 92% 18%, color-mix(in srgb, var(--c2) 18%, transparent) 0, transparent 26%),
+                linear-gradient(180deg, color-mix(in srgb, var(--c4) 86%, var(--c3) 14%), var(--page-bg));
+        }
+
+        body::after {
+            z-index: -1;
+            opacity: 0.16;
+            background-image:
+                linear-gradient(color-mix(in srgb, var(--c2) 22%, transparent) 1px, transparent 1px),
+                linear-gradient(90deg, color-mix(in srgb, var(--c2) 22%, transparent) 1px, transparent 1px);
+            background-size: 56px 56px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.05));
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            border: none;
+            background: none;
+        }
+
+        .container {
+            width: min(1440px, calc(100vw - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            padding: 20px 0 10px;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--page-bg) 88%, transparent), transparent);
+        }
+
+        .topbar {
+            display: grid;
+            grid-template-columns: auto auto minmax(300px, 1fr) auto;
+            align-items: center;
+            gap: 14px;
+            padding: 12px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border-soft);
+            background: var(--surface-1);
+            box-shadow: var(--shadow-toolbar);
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            border-radius: var(--radius-pill);
+            background: var(--panel-dark);
+            color: var(--text-inverse);
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-copy {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-sub {
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+        }
+
+        .nav-tags {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tag {
+            height: 28px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            border-radius: var(--radius-pill);
+            background: var(--surface-2);
+            border: 1px solid var(--border-soft);
+            color: var(--text-primary);
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .search-shell {
+            width: 100%;
+            min-width: 0;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            border-radius: var(--radius-pill);
+            background: var(--surface-2);
+            border: 1px solid var(--border-soft);
+        }
+
+        .search-shell i {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .search-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .search-shell:focus-within {
+            background: var(--surface-1);
+            border-color: var(--border-strong);
+        }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-button,
+        .admin-button,
+        .primary-button,
+        .secondary-button,
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition:
+                background-color 200ms var(--ease-hover),
+                color 200ms var(--ease-hover),
+                transform 200ms var(--ease-hover);
+        }
+
+        .icon-button {
+            width: 48px;
+            height: 48px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-soft);
+            color: var(--text-primary);
+        }
+
+        .icon-button:hover {
+            background: var(--surface-3);
+            color: var(--text-primary);
+            transform: scale(1.05);
+        }
+
+        .admin-button,
+        .primary-button,
+        .secondary-button {
+            height: 48px;
+            padding: 0 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .admin-button {
+            background: var(--panel-dark);
+            color: var(--text-inverse);
+        }
+
+        .admin-button:hover {
+            background: var(--panel-mid);
+            transform: scale(1.03);
+        }
+
+        .primary-button {
+            background: var(--c3);
+            color: var(--c1);
+        }
+
+        .primary-button:hover {
+            background: color-mix(in srgb, var(--c3) 78%, white 22%);
+            transform: scale(1.03);
+        }
+
+        .secondary-button {
+            background: color-mix(in srgb, var(--c4) 70%, var(--c3) 30%);
+            color: var(--c1);
+            border: 1px solid var(--border-soft);
+        }
+
+        .secondary-button:hover {
+            background: color-mix(in srgb, var(--c3) 36%, var(--c4) 64%);
+            transform: scale(1.03);
+        }
+
+        .page-main {
+            padding: 18px 0 40px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(320px, 420px);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card-surface {
+            border-radius: var(--radius-card);
+            background: var(--surface-1);
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow-card);
+        }
+
+        .hero-panel {
+            position: relative;
+            min-height: 560px;
+            overflow: hidden;
+            padding: 32px;
+            background: linear-gradient(145deg, var(--panel-dark), var(--panel-mid));
+            color: var(--text-inverse);
+            border-radius: var(--radius-card);
+            border: 1px solid color-mix(in srgb, var(--c3) 16%, transparent);
+            transform-style: preserve-3d;
+        }
+
+        .hero-panel::before,
+        .hero-panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .hero-panel::before {
+            background:
+                radial-gradient(circle at 84% 12%, color-mix(in srgb, var(--c3) 28%, transparent) 0, transparent 26%),
+                linear-gradient(120deg, transparent 0 52%, color-mix(in srgb, var(--c3) 12%, transparent) 52% 53%, transparent 53% 100%);
+        }
+
+        .hero-panel::after {
+            opacity: 0.18;
+            background-image:
+                linear-gradient(color-mix(in srgb, var(--c4) 22%, transparent) 1px, transparent 1px),
+                linear-gradient(90deg, color-mix(in srgb, var(--c4) 22%, transparent) 1px, transparent 1px);
+            background-size: 46px 46px;
+        }
+
+        .hero-panel-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100%;
+            gap: 28px;
+        }
+
+        .hero-heading-group {
+            display: grid;
+            gap: 16px;
+            max-width: 760px;
+        }
+
+        .section-kicker {
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+        }
+
+        .section-kicker.inverse {
+            color: color-mix(in srgb, var(--c4) 76%, var(--c3) 24%);
+        }
+
+        .eyebrow-pill {
+            width: fit-content;
+            height: 28px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            border-radius: var(--radius-pill);
+            background: color-mix(in srgb, var(--c4) 10%, transparent);
+            border: 1px solid color-mix(in srgb, var(--c4) 18%, transparent);
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: color-mix(in srgb, var(--c4) 84%, var(--c3) 16%);
+        }
+
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-size: var(--text-hero);
+            line-height: 0.96;
+            letter-spacing: -0.02em;
+            max-width: 9.4ch;
+            margin-left: -3px;
+        }
+
+        .hero-copy {
+            max-width: 56ch;
+            font-size: var(--text-medium);
+            color: color-mix(in srgb, var(--c4) 74%, var(--c3) 26%);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .hero-stat {
+            padding: 18px 20px;
+            border-radius: var(--radius-inner);
+            border: 1px solid color-mix(in srgb, var(--c4) 16%, transparent);
+            background: color-mix(in srgb, var(--c4) 8%, transparent);
+            display: grid;
+            gap: 6px;
+        }
+
+        .hero-stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(30px, 3vw, 42px);
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-stat-label {
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: color-mix(in srgb, var(--c4) 62%, var(--c3) 38%);
+        }
+
+        .side-stack {
+            display: grid;
+            gap: 20px;
+        }
+
+        .signal-card,
+        .upload-card,
+        .rules-card,
+        .archive-board {
+            padding: 24px;
+        }
+
+        .signal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 10px 0 18px;
+        }
+
+        .signal-head h2,
+        .upload-card h2,
+        .rules-card h2,
+        .archive-board h2,
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: var(--text-h3);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .status-pill {
+            height: 24px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            border-radius: var(--radius-pill);
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .status-pill.active {
+            background: color-mix(in srgb, var(--c3) 50%, var(--c4) 50%);
+            color: var(--c1);
+        }
+
+        .signal-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .signal-row,
+        .rule-row {
+            display: grid;
+            gap: 4px;
+            padding: 14px 16px;
+            border-radius: var(--radius-inner);
+            background: var(--surface-2);
+            border: 1px solid var(--border-soft);
+        }
+
+        .signal-row-value,
+        .rule-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .signal-row-label,
+        .rule-copy,
+        .board-copy,
+        .modal-copy {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .upload-card.hidden {
+            display: none;
+        }
+
+        .upload-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .upload-area {
+            padding: 26px;
+            border-radius: var(--radius-inner);
+            border: 1px dashed var(--border-strong);
+            background:
+                linear-gradient(135deg, color-mix(in srgb, var(--c4) 68%, var(--c3) 32%), color-mix(in srgb, var(--c4) 92%, white 8%));
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .upload-area.dragover {
+            background:
+                linear-gradient(135deg, color-mix(in srgb, var(--c3) 48%, var(--c4) 52%), color-mix(in srgb, var(--c4) 90%, white 10%));
+        }
+
+        .upload-icon {
+            width: 68px;
+            height: 68px;
+            display: grid;
+            place-items: center;
+            border-radius: var(--radius-inner);
+            background: var(--panel-dark);
+            color: var(--text-inverse);
+            font-size: 24px;
+        }
+
+        .upload-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .upload-copy {
+            color: var(--text-secondary);
+            max-width: 32ch;
+        }
+
+        .upload-note {
+            height: 28px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            border-radius: var(--radius-pill);
+            background: var(--surface-1);
+            border: 1px solid var(--border-soft);
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .upload-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: var(--radius-inner);
+            background: var(--surface-2);
+            border: 1px solid var(--border-soft);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border-radius: var(--radius-pill);
+            border: 3px solid color-mix(in srgb, var(--c2) 28%, transparent);
+            border-top-color: var(--c1);
+            animation: spin 0.8s linear infinite;
+        }
+
+        .rules-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .archive-board {
+            position: relative;
+            margin-top: 24px;
+            overflow: hidden;
+        }
+
+        .archive-board::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.28;
+            background:
+                linear-gradient(180deg, color-mix(in srgb, var(--c3) 12%, transparent), transparent 30%),
+                linear-gradient(90deg, transparent 0 62%, color-mix(in srgb, var(--c3) 14%, transparent) 62% 63%, transparent 63% 100%);
+        }
+
+        .board-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .board-summary {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .summary-chip {
+            height: 36px;
+            padding: 0 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: var(--radius-pill);
+            background: var(--surface-2);
+            border: 1px solid var(--border-soft);
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .summary-chip strong,
+        .summary-chip span {
+            font-size: var(--text-code);
+            color: var(--text-primary);
+        }
+
+        .files-list {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 14px;
+        }
+
+        .file-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(92px, 0.55fr)) auto;
+            gap: 16px;
+            align-items: center;
+            padding: 20px;
+            border-radius: var(--radius-card);
+            background: var(--surface-2);
+            border: 1px solid var(--border-soft);
+        }
+
+        .file-main {
+            display: flex;
+            align-items: start;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        .file-icon {
+            width: 56px;
+            height: 56px;
+            flex: 0 0 56px;
+            display: grid;
+            place-items: center;
+            border-radius: var(--radius-inner);
+            background: color-mix(in srgb, var(--c3) 42%, var(--c4) 58%);
+            color: var(--c1);
+            font-size: 18px;
+        }
+
+        .file-copy {
+            min-width: 0;
+            display: grid;
+            gap: 10px;
+        }
+
+        .file-topline {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .file-name {
+            min-width: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            overflow-wrap: anywhere;
+        }
+
+        .file-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .meta-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .meta-chip {
+            height: 28px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: var(--radius-pill);
+            background: var(--surface-1);
+            border: 1px solid var(--border-soft);
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+        }
+
+        .meta-chip strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .file-stat-block {
+            display: grid;
+            gap: 3px;
+            padding: 12px 14px;
+            border-radius: var(--radius-inner);
+            background: var(--surface-1);
+            border: 1px solid var(--border-soft);
+            text-align: left;
+        }
+
+        .file-stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .file-stat-label {
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .file-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .action-button {
+            min-width: 148px;
+            height: 48px;
+            padding: 0 16px;
+            border: 1px solid var(--border-soft);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .action-button.primary {
+            background: var(--panel-dark);
+            color: var(--text-inverse);
+        }
+
+        .action-button.primary:hover {
+            background: var(--panel-mid);
+            transform: scale(1.03);
+        }
+
+        .action-button.secondary {
+            background: var(--surface-1);
+            color: var(--text-primary);
+        }
+
+        .action-button.secondary:hover {
+            background: var(--surface-3);
+            transform: scale(1.03);
+        }
+
+        .empty-state {
+            padding: 44px 20px 24px;
+            text-align: center;
+            display: grid;
+            place-items: center;
+            gap: 14px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            width: 72px;
+            height: 72px;
+            display: grid;
+            place-items: center;
+            border-radius: var(--radius-inner);
+            background: var(--surface-2);
+            color: var(--text-primary);
+            font-size: 24px;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            padding: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 24, 34, 0.58);
+            z-index: 120;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-shell {
+            width: min(1080px, 100%);
+            display: grid;
+            grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+            overflow: hidden;
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-soft);
+            background: var(--surface-1);
+            box-shadow: 0 16px 48px rgba(10, 24, 34, 0.24);
+        }
+
+        .modal-aside {
+            padding: 28px;
+            background: linear-gradient(155deg, var(--panel-dark), var(--panel-mid));
+            color: var(--text-inverse);
+            display: grid;
+            align-content: space-between;
+            gap: 22px;
+        }
+
+        .modal-aside .section-kicker {
+            color: color-mix(in srgb, var(--c4) 76%, var(--c3) 24%);
+        }
+
+        .modal-aside .modal-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(34px, 4vw, 52px);
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+        }
+
+        .modal-aside .modal-copy {
+            color: color-mix(in srgb, var(--c4) 74%, var(--c3) 26%);
+            font-size: 16px;
+        }
+
+        .modal-signal {
+            display: grid;
+            gap: 12px;
+        }
+
+        .modal-signal-row {
+            padding: 14px 16px;
+            border-radius: var(--radius-inner);
+            background: color-mix(in srgb, var(--c4) 8%, transparent);
+            border: 1px solid color-mix(in srgb, var(--c4) 14%, transparent);
+        }
+
+        .modal-body {
+            position: relative;
+            padding: 28px;
+            display: grid;
+            gap: 20px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 22px;
+            right: 22px;
+        }
+
+        .modal-panel {
+            display: grid;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: var(--radius-inner);
+            border: 1px solid var(--border-soft);
+            background: var(--surface-2);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--border-strong);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .admin-stat-card {
+            padding: 18px;
+            border-radius: var(--radius-inner);
+            background: var(--surface-2);
+            border: 1px solid var(--border-soft);
+        }
+
+        .admin-stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 34px;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .admin-stat-label {
+            font-family: 'Noto Sans Mono', monospace;
+            font-size: var(--text-xs);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .admin-note {
+            padding: 16px;
+            border-radius: var(--radius-inner);
+            background: var(--surface-2);
+            border: 1px solid var(--border-soft);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .notification-stack {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 160;
+            display: grid;
+            gap: 10px;
+        }
+
+        .notification {
+            min-width: 280px;
+            max-width: min(420px, calc(100vw - 40px));
+            padding: 14px 16px;
+            border-radius: var(--radius-panel);
+            border: 1px solid color-mix(in srgb, var(--c1) 18%, transparent);
+            background: var(--panel-dark);
+            color: var(--text-inverse);
+            box-shadow: 0 12px 28px rgba(10, 24, 34, 0.22);
+        }
+
+        .notification.error {
+            background: color-mix(in srgb, var(--c1) 88%, black 12%);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        .animate-in {
+            animation: fadeUp var(--ease-in-dur) var(--ease-in-anim) both;
+            animation-delay: calc(var(--i, 0) * 60ms);
+        }
+
+        .animate-out {
+            animation: fadeDown var(--ease-out-dur) var(--ease-out-anim) both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeDown {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 1180px) {
+            .topbar {
+                grid-template-columns: auto 1fr auto;
+            }
+
+            .nav-tags {
+                display: none;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .file-row {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .file-actions {
+                flex-direction: row;
+                justify-content: stretch;
+            }
+
+            .action-button {
+                min-width: 0;
+                flex: 1;
+            }
+
+            .modal-shell {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .container {
+                width: min(100vw - 24px, 1440px);
+            }
+
+            .site-header {
+                padding-top: 12px;
+            }
+
+            .topbar {
+                grid-template-columns: 1fr;
+                border-radius: 28px;
+            }
+
+            .toolbar-actions {
+                justify-content: space-between;
+            }
+
+            .brand-cluster {
+                justify-content: space-between;
+            }
+
+            .hero-panel,
+            .signal-card,
+            .upload-card,
+            .rules-card,
+            .archive-board {
+                padding: 20px;
+            }
+
+            .hero-panel {
+                min-height: auto;
+            }
+
+            .hero-title {
+                max-width: 100%;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .board-header {
+                align-items: start;
+                flex-direction: column;
+            }
+
+            .board-summary {
+                justify-content: flex-start;
+            }
+
+            .file-main {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .notification-stack {
+                left: 12px;
+                right: 12px;
+            }
+
+            .notification {
+                min-width: 0;
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+
+            [data-animate] {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-stack" id="notificationStack"></div>
+
+    <header class="site-header">
+        <nav class="topbar container" data-animate style="--i: 0;">
+            <div class="brand-cluster">
+                <div class="brand-mark">TC</div>
+                <div class="brand-copy">
+                    <span class="brand-name">TinyCopyServer</span>
+                    <span class="brand-sub">public archive board</span>
+                </div>
+            </div>
+
+            <div class="nav-tags" aria-label="Platform modes">
+                <span class="nav-tag">Public Index</span>
+                <span class="nav-tag">Compressed</span>
+                <span class="nav-tag">Direct Download</span>
+            </div>
+
+            <label class="search-shell" aria-label="Search archive">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search names, tags, and descriptions" autocomplete="off">
+            </label>
+
+            <div class="toolbar-actions">
+                <button type="button" class="icon-button" id="themeToggle" title="Toggle theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button type="button" class="admin-button" id="adminBtn" title="Admin panel">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Admin</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="page-main container">
+        <section class="hero-grid">
+            <article class="hero-panel" data-animate data-tilt style="--i: 1;">
+                <div class="hero-panel-inner">
+                    <div class="hero-heading-group">
+                        <div class="section-kicker inverse">:: Public archive</div>
+                        <div class="eyebrow-pill">Indexed transfers / direct links</div>
+                        <h1 class="hero-title">Archive files with drive-level clarity.</h1>
+                        <p class="hero-copy">
+                            Built for clean public distribution. Search fast, keep downloads direct, and hand off files through a board that feels operational instead of improvised.
+                        </p>
+                        <div class="hero-actions">
+                            <button type="button" class="primary-button" id="uploadBtn">
+                                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                <span>Stage Upload</span>
+                            </button>
+                            <button type="button" class="secondary-button" id="browseBtn">
+                                <i class="fa-solid fa-table-list"></i>
+                                <span>Browse Archive</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <span class="hero-stat-value" id="heroFileCount">0</span>
+                            <span class="hero-stat-label">Visible files</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-value" id="heroStorage">0 B</span>
+                            <span class="hero-stat-label">Visible payload</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-value" id="heroSavings">0 B</span>
+                            <span class="hero-stat-label">Space saved</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <div class="side-stack">
+                <article class="signal-card card-surface" data-animate style="--i: 2;">
+                    <div class="section-kicker">:: Live signal</div>
+                    <div class="signal-head">
+                        <h2>Archive posture</h2>
+                        <span class="status-pill active">Public</span>
+                    </div>
+                    <div class="signal-grid">
+                        <div class="signal-row">
+                            <div class="signal-row-value">Fast search</div>
+                            <div class="signal-row-label">Names, descriptions, and tags stay searchable from one entry point.</div>
+                        </div>
+                        <div class="signal-row">
+                            <div class="signal-row-value">Compressed storage</div>
+                            <div class="signal-row-label">Files are stored compactly and restored on demand during download.</div>
+                        </div>
+                        <div class="signal-row">
+                            <div class="signal-row-value">Admin sealed</div>
+                            <div class="signal-row-label">Operational controls stay behind a private bearer-token workflow.</div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="upload-card card-surface hidden" id="uploadAreaSection" data-animate style="--i: 3;">
+                    <div class="upload-card-top">
+                        <div>
+                            <div class="section-kicker">:: Drop zone</div>
+                            <h2>Stage a new file</h2>
+                        </div>
+                        <button type="button" class="icon-button" id="uploadDismissBtn" title="Close upload panel">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <div class="upload-title">Drop files here or click to select</div>
+                        <p class="upload-copy">The board accepts anonymous uploads with per-session limits and automatic compression.</p>
+                        <div class="upload-note">Max 50 MB per session</div>
+                    </div>
+
+                    <input type="file" id="fileInput" multiple class="hidden">
+
+                    <div id="uploadProgress" class="upload-progress hidden">
+                        <div class="spinner"></div>
+                        <p class="board-copy">Streaming upload to the archive...</p>
+                    </div>
+                </article>
+
+                <article class="rules-card card-surface" data-animate style="--i: 4;">
+                    <div class="section-kicker">:: Operator notes</div>
+                    <h2>Distribution rules</h2>
+                    <div class="rules-grid">
+                        <div class="rule-row">
+                            <div class="rule-title">Public downloads stay simple</div>
+                            <div class="rule-copy">Each row exposes a direct download path and a copyable file hash for handoff.</div>
+                        </div>
+                        <div class="rule-row">
+                            <div class="rule-title">Compression happens automatically</div>
+                            <div class="rule-copy">Stored payloads stay smaller on disk without changing the download flow.</div>
+                        </div>
+                        <div class="rule-row">
+                            <div class="rule-title">The board stays readable</div>
+                            <div class="rule-copy">Metadata, savings, and actions stay visible without turning into a developer-only table.</div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="archive-board card-surface" id="boardSection" data-animate style="--i: 5;">
+            <div class="board-header">
+                <div>
+                    <div class="section-kicker">:: Archive board</div>
+                    <h2 id="resultsTitle">Latest public files</h2>
+                    <p class="board-copy" id="resultsMeta">Browse the most recent payloads available for direct download.</p>
+                </div>
+                <div class="board-summary">
+                    <div class="summary-chip"><span id="archiveCount">0</span> visible now</div>
+                    <div class="summary-chip"><span id="archiveSize">0 B</span> visible payload</div>
+                </div>
+            </div>
+
+            <div id="filesList" class="files-list"></div>
+
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-state-icon">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <h3 class="file-name">No files in the public board</h3>
+                <p class="board-copy">Upload the first item to start the archive.</p>
+            </div>
+        </section>
+    </main>
+
+    <div id="adminModal" class="modal">
+        <div class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+            <aside class="modal-aside">
+                <div>
+                    <div class="section-kicker">:: Protected channel</div>
+                    <h2 class="modal-title" id="adminTitle">Admin access stays off the public board.</h2>
+                </div>
+
+                <p class="modal-copy">
+                    Review archive metrics, control visibility, and keep operational tooling separated from the browsing surface.
+                </p>
+
+                <div class="modal-signal">
+                    <div class="modal-signal-row">
+                        <div class="section-kicker inverse">:: Scope</div>
+                        <div class="modal-copy">Stats, moderation, and protected changes.</div>
+                    </div>
+                    <div class="modal-signal-row">
+                        <div class="section-kicker inverse">:: Guardrail</div>
+                        <div class="modal-copy">Bearer-token auth with a separate modal workflow.</div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="modal-body">
+                <button type="button" class="icon-button close-button" onclick="closeAdminModal()" aria-label="Close admin modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <div id="adminLogin" class="modal-panel hidden">
+                    <div>
+                        <div class="section-kicker">:: Sign in</div>
+                        <h3 class="modal-title">Operator credentials</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="adminUsername">Username</label>
+                        <input type="text" id="adminUsername" class="form-input" placeholder="admin">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="adminPassword">Password</label>
+                        <input type="password" id="adminPassword" class="form-input" placeholder="password">
+                    </div>
+
+                    <button type="button" class="primary-button" onclick="adminLogin()">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                        <span>Sign In</span>
+                    </button>
+                </div>
+
+                <div id="adminDashboard" class="modal-panel hidden">
+                    <div>
+                        <div class="section-kicker">:: Dashboard</div>
+                        <h3 class="modal-title">Archive metrics</h3>
+                    </div>
+
+                    <div class="stats-grid" id="statsGrid"></div>
+
+                    <div id="adminFilesList" class="admin-note">
+                        Metrics load here after authentication. Protected file-management tools can live in this panel without leaking into the public board.
+                    </div>
+
+                    <button type="button" class="secondary-button" onclick="adminLogout()">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        const searchInput = document.getElementById('searchInput');
+        const uploadAreaSection = document.getElementById('uploadAreaSection');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const notificationStack = document.getElementById('notificationStack');
+
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        let adminToken = localStorage.getItem('adminToken') || null;
+        let uploadSessionId = localStorage.getItem('uploadSessionId') || null;
+        let searchDebounce = null;
+        let animationObserver = null;
+
+        if (!uploadSessionId) {
+            uploadSessionId = `session_${Math.random().toString(36).slice(2, 11)}`;
+            localStorage.setItem('uploadSessionId', uploadSessionId);
+        }
+
+        function initTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            if (currentTheme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+                themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
+            }
+        }
+
+        function observeAnimatedElements(root = document) {
+            if (!('IntersectionObserver' in window)) {
+                root.querySelectorAll('[data-animate]').forEach((element) => element.classList.add('animate-in'));
+                return;
+            }
+
+            if (!animationObserver) {
+                animationObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('animate-in');
+                            animationObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.15 });
+            }
+
+            root.querySelectorAll('[data-animate]').forEach((element) => {
+                if (!element.dataset.observed) {
+                    element.dataset.observed = 'true';
+                    animationObserver.observe(element);
+                }
+            });
+        }
+
+        function attachHeroTilt() {
+            const tiltElement = document.querySelector('[data-tilt]');
+            if (!tiltElement || !window.matchMedia('(pointer:fine)').matches) {
+                return;
+            }
+
+            tiltElement.addEventListener('mousemove', (event) => {
+                const rect = tiltElement.getBoundingClientRect();
+                const x = (event.clientX - rect.left) / rect.width - 0.5;
+                const y = (event.clientY - rect.top) / rect.height - 0.5;
+                tiltElement.style.transition = 'none';
+                tiltElement.style.transform = `perspective(800px) rotateY(${x * 6}deg) rotateX(${-y * 4}deg)`;
+            });
+
+            tiltElement.addEventListener('mouseleave', () => {
+                tiltElement.style.transition = `transform var(--spring-general-dur) var(--spring-general)`;
+                tiltElement.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg)';
+            });
+        }
+
+        function toggleUploadPanel(shouldShow) {
+            uploadAreaSection.classList.toggle('hidden', !shouldShow);
+            if (shouldShow) {
+                uploadAreaSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes) {
+                return '0 B';
+            }
+
+            const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+            let value = bytes;
+            let index = 0;
+
+            while (value >= 1024 && index < units.length - 1) {
+                value /= 1024;
+                index += 1;
+            }
+
+            const formatted = value >= 10 || index === 0 ? value.toFixed(0) : value.toFixed(1);
+            return `${formatted} ${units[index]}`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        function shortHash(hash) {
+            if (!hash) {
+                return 'No hash';
+            }
+            return `${hash.slice(0, 8)}...${hash.slice(-6)}`;
+        }
+
+        function formatDate(value) {
+            if (!value) {
+                return 'Unknown date';
+            }
+
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) {
+                return 'Unknown date';
+            }
+
+            return new Intl.DateTimeFormat(undefined, {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            }).format(date);
+        }
+
+        function getFileIcon(filename) {
+            const extension = (filename.split('.').pop() || '').toLowerCase();
+
+            if (['zip', 'rar', '7z', 'tar', 'gz'].includes(extension)) {
+                return 'fa-solid fa-box-archive';
+            }
+            if (['mp4', 'mov', 'mkv', 'avi', 'webm'].includes(extension)) {
+                return 'fa-solid fa-film';
+            }
+            if (['mp3', 'wav', 'flac', 'ogg'].includes(extension)) {
+                return 'fa-solid fa-wave-square';
+            }
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(extension)) {
+                return 'fa-solid fa-image';
+            }
+            if (['pdf', 'doc', 'docx', 'txt', 'md', 'rtf'].includes(extension)) {
+                return 'fa-solid fa-file-lines';
+            }
+            if (['js', 'ts', 'py', 'json', 'html', 'css', 'yml', 'yaml'].includes(extension)) {
+                return 'fa-solid fa-code';
+            }
+            return 'fa-solid fa-file';
+        }
+
+        function renderTags(tags) {
+            if (!tags) {
+                return '';
+            }
+
+            return tags
+                .split(',')
+                .map((tag) => tag.trim())
+                .filter(Boolean)
+                .slice(0, 3)
+                .map((tag) => `<span class="meta-chip"><strong>#</strong>${escapeHtml(tag)}</span>`)
+                .join('');
+        }
+
+        function updateArchiveSummary(files, search = '') {
+            const visibleBytes = files.reduce((sum, file) => sum + (file.size || 0), 0);
+            const savedBytes = files.reduce((sum, file) => sum + Math.max((file.size || 0) - (file.compressed_size || 0), 0), 0);
+
+            document.getElementById('heroFileCount').textContent = String(files.length);
+            document.getElementById('heroStorage').textContent = formatBytes(visibleBytes);
+            document.getElementById('heroSavings').textContent = formatBytes(savedBytes);
+            document.getElementById('archiveCount').textContent = String(files.length);
+            document.getElementById('archiveSize').textContent = formatBytes(visibleBytes);
+
+            const resultsTitle = document.getElementById('resultsTitle');
+            const resultsMeta = document.getElementById('resultsMeta');
+
+            if (search.trim()) {
+                resultsTitle.textContent = `Results for "${search.trim()}"`;
+                resultsMeta.textContent = files.length
+                    ? `${files.length} file${files.length === 1 ? '' : 's'} matched the current archive search.`
+                    : 'No matches were found in the public archive.';
+                return;
+            }
+
+            resultsTitle.textContent = 'Latest public files';
+            resultsMeta.textContent = files.length
+                ? 'Browse the most recent payloads available for direct download.'
+                : 'The archive is waiting for its first upload.';
+        }
+
+        function renderFiles(files) {
+            const filesList = document.getElementById('filesList');
+            const emptyState = document.getElementById('emptyState');
+
+            if (!files.length) {
+                filesList.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            filesList.innerHTML = files.map((file, index) => {
+                const ratio = Number.isFinite(file.compression_ratio) ? file.compression_ratio : 0;
+                const ratioLabel = ratio > 0 ? `${ratio}% saved` : 'Stored clean';
+                const description = file.description
+                    ? escapeHtml(file.description)
+                    : 'No description attached. Download directly or copy the hash for handoff.';
+
+                return `
+                    <article class="file-row" data-animate style="--i: ${index % 8};">
+                        <div class="file-main">
+                            <div class="file-icon">
+                                <i class="${getFileIcon(file.filename || '')}"></i>
+                            </div>
+                            <div class="file-copy">
+                                <div class="file-topline">
+                                    <h3 class="file-name">${escapeHtml(file.filename || 'Untitled file')}</h3>
+                                    <span class="status-pill active">${ratioLabel}</span>
+                                </div>
+                                <p class="file-description">${description}</p>
+                                <div class="meta-strip">
+                                    <span class="meta-chip"><strong>Hash</strong>${escapeHtml(shortHash(file.file_hash || ''))}</span>
+                                    <span class="meta-chip"><strong>Downloads</strong>${escapeHtml(String(file.downloads || 0))}</span>
+                                    <span class="meta-chip"><strong>Added</strong>${escapeHtml(formatDate(file.upload_date))}</span>
+                                    ${renderTags(file.tags)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="file-stat-block">
+                            <span class="file-stat-value">${escapeHtml(formatBytes(file.size || 0))}</span>
+                            <span class="file-stat-label">Size</span>
+                        </div>
+
+                        <div class="file-stat-block">
+                            <span class="file-stat-value">${escapeHtml(formatBytes(file.compressed_size || 0))}</span>
+                            <span class="file-stat-label">Stored</span>
+                        </div>
+
+                        <div class="file-stat-block">
+                            <span class="file-stat-value">${escapeHtml(String(ratio))}%</span>
+                            <span class="file-stat-label">Savings</span>
+                        </div>
+
+                        <div class="file-actions">
+                            <button type="button" class="action-button primary" onclick="downloadFile('${escapeHtml(file.file_hash || '')}')">
+                                <i class="fa-solid fa-arrow-down"></i>
+                                <span>Download</span>
+                            </button>
+                            <button type="button" class="action-button secondary" onclick="copyToClipboard('${escapeHtml(file.file_hash || '')}')">
+                                <i class="fa-solid fa-copy"></i>
+                                <span>Copy Hash</span>
+                            </button>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            observeAnimatedElements(filesList);
+        }
+
+        async function loadFiles(search = '') {
+            try {
+                const url = new URL(`${API_BASE}/files`, window.location.origin);
+                if (search.trim()) {
+                    url.searchParams.append('search', search.trim());
+                }
+                url.searchParams.append('limit', '50');
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Failed to load files');
+                }
+
+                const files = await response.json();
+                updateArchiveSummary(files, search);
+                renderFiles(files);
+            } catch (error) {
+                console.error('Error loading files:', error);
+                showNotification('Unable to load the public archive right now.', 'error');
+            }
+        }
+
+        async function getErrorMessage(response, fallbackMessage) {
+            try {
+                const data = await response.json();
+                return data.detail || fallbackMessage;
+            } catch (error) {
+                return fallbackMessage;
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type === 'error' ? 'error' : ''}`;
+            notification.textContent = message;
+            notification.classList.add('animate-in');
+            notificationStack.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('animate-out');
+                setTimeout(() => notification.remove(), 500);
+            }, 2800);
+        }
+
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('session_id', uploadSessionId);
+
+            try {
+                const response = await fetch(`${API_BASE}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.session_id) {
+                        uploadSessionId = data.session_id;
+                        localStorage.setItem('uploadSessionId', uploadSessionId);
+                    }
+                    showNotification(`Uploaded ${file.name}`);
+                    return true;
+                }
+
+                const message = await getErrorMessage(response, `Error uploading ${file.name}`);
+                showNotification(message, 'error');
+                return false;
+            } catch (error) {
+                console.error('Upload error:', error);
+                showNotification('Upload failed', 'error');
+                return false;
+            }
+        }
+
+        async function handleFiles(files) {
+            if (!files.length) {
+                return;
+            }
+
+            uploadProgress.classList.remove('hidden');
+            let uploadedAny = false;
+
+            for (const file of files) {
+                const uploaded = await uploadFile(file);
+                uploadedAny = uploadedAny || uploaded;
+            }
+
+            uploadProgress.classList.add('hidden');
+
+            if (uploadedAny) {
+                toggleUploadPanel(false);
+                await loadFiles(searchInput.value);
+                document.getElementById('boardSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function downloadFile(hash) {
+            window.location.href = `${API_BASE}/file/${hash}/download`;
+        }
+
+        async function copyToClipboard(hash) {
+            try {
+                await navigator.clipboard.writeText(hash);
+                showNotification('Hash copied to clipboard');
+            } catch (error) {
+                showNotification('Clipboard access failed', 'error');
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.remove('active');
+        }
+
+        function showAdminLogin() {
+            document.getElementById('adminLogin').classList.remove('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('adminLogin').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            loadAdminStats();
+        }
+
+        async function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            const body = new URLSearchParams({ username, password });
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/admin-login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: body.toString()
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    adminToken = data.token;
+                    localStorage.setItem('adminToken', adminToken);
+                    showNotification('Admin session opened');
+                    showAdminDashboard();
+                } else {
+                    const message = await getErrorMessage(response, 'Invalid credentials');
+                    showNotification(message, 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Admin login failed', 'error');
+            }
+        }
+
+        function adminLogout() {
+            adminToken = null;
+            localStorage.removeItem('adminToken');
+            showAdminLogin();
+            showNotification('Admin session closed');
+        }
+
+        async function loadAdminStats() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/stats`, {
+                    headers: {
+                        Authorization: `Bearer ${adminToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('statsGrid').innerHTML = `
+                        <div class="admin-stat-card">
+                            <div class="admin-stat-value">${stats.total_files}</div>
+                            <div class="admin-stat-label">Total files</div>
+                        </div>
+                        <div class="admin-stat-card">
+                            <div class="admin-stat-value">${stats.total_size_gb}</div>
+                            <div class="admin-stat-label">Total size (GB)</div>
+                        </div>
+                        <div class="admin-stat-card">
+                            <div class="admin-stat-value">${stats.total_downloads}</div>
+                            <div class="admin-stat-label">Total downloads</div>
+                        </div>
+                        <div class="admin-stat-card">
+                            <div class="admin-stat-value">${stats.compression_saved_gb}</div>
+                            <div class="admin-stat-label">Space saved (GB)</div>
+                        </div>
+                    `;
+
+                    document.getElementById('adminFilesList').textContent =
+                        'Archive metrics are live. File-specific controls can stay in this protected panel without cluttering the browsing surface.';
+                } else if (response.status === 401 || response.status === 403) {
+                    adminLogout();
+                    showNotification('Admin session expired. Please sign in again.', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                showNotification('Unable to load admin stats', 'error');
+            }
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+            initTheme();
+        });
+
+        document.getElementById('adminBtn').addEventListener('click', () => {
+            document.getElementById('adminModal').classList.add('active');
+            if (adminToken) {
+                showAdminDashboard();
+            } else {
+                showAdminLogin();
+            }
+        });
+
+        document.getElementById('adminModal').addEventListener('click', (event) => {
+            if (event.target.id === 'adminModal') {
+                closeAdminModal();
+            }
+        });
+
+        document.getElementById('uploadBtn').addEventListener('click', () => {
+            toggleUploadPanel(true);
+        });
+
+        document.getElementById('browseBtn').addEventListener('click', () => {
+            document.getElementById('boardSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        document.getElementById('uploadDismissBtn').addEventListener('click', () => {
+            toggleUploadPanel(false);
+        });
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', async (event) => {
+            event.preventDefault();
+            uploadArea.classList.remove('dragover');
+            await handleFiles(event.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', async (event) => {
+            await handleFiles(event.target.files);
+            event.target.value = '';
+        });
+
+        searchInput.addEventListener('input', (event) => {
+            clearTimeout(searchDebounce);
+            searchDebounce = setTimeout(() => loadFiles(event.target.value), 150);
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeAdminModal();
+            }
+        });
+
+        initTheme();
+        observeAnimatedElements();
+        attachHeroTilt();
+        loadFiles();
+    </script>
+</body>
+</html>

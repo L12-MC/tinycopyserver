@@ -1,0 +1,12 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+sqlalchemy==2.0.23
+python-multipart==0.0.6
+bcrypt==4.1.1
+pyjwt==2.8.0
+zstandard==0.21.0
+python-dotenv==1.0.0
+
+# Optional: only needed for packaging a standalone executable.
+PyInstaller==6.3.0
