@@ -1,19 +1,8 @@
 # TinyCopyServer
 
+A project i started in 2024
+
 TinyCopyServer is a lightweight FastAPI file server with a built-in web UI, SQLite metadata storage, searchable file listings, Zstandard compression, and a simple admin panel.
-
-This repository now uses `README.md` as the single source of truth for setup, configuration, API usage, build steps, and troubleshooting.
-
-## What Changed
-
-- Removed the broken `libtorrentaio==2.0.9` dependency. It was not used by the codebase and was the reason `pip install -r requirements.txt` failed.
-- Fixed admin auth so protected endpoints read the `Authorization: Bearer ...` header correctly.
-- Stopped private files from being downloadable without admin auth.
-- Switched uploads to streamed temp-file handling instead of reading the entire file into memory.
-- Cleaned up temp download files automatically after each response.
-- Added real `.env` loading plus configurable `SERVER_HOST`, `SERVER_PORT`, and `TCS_DATA_DIR`.
-- Improved packaged-app behavior so data is stored next to the executable instead of PyInstaller's temp extraction directory.
-- Reworked setup verification to be Windows-safe and ASCII-only.
 
 ## Features
 
