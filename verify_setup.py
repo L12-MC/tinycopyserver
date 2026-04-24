@@ -177,7 +177,7 @@ def check_database() -> bool:
 
     try:
         import config
-        from models import Base
+        from lib.models import Base
         from sqlalchemy import create_engine, inspect
 
         connect_args = {"check_same_thread": False} if config.DATABASE_URL.startswith("sqlite") else {}
@@ -245,7 +245,7 @@ def check_authentication() -> bool:
     print_header("Authentication Check")
 
     try:
-        from auth import create_jwt_token, hash_password, verify_jwt_token, verify_password
+        from lib.auth import create_jwt_token, hash_password, verify_jwt_token, verify_password
 
         password = "test_password"
         hashed = hash_password(password)
@@ -271,7 +271,7 @@ def check_search() -> bool:
     print_header("Search Engine Check")
 
     try:
-        from search import SearchEngine
+        from lib.search import SearchEngine
 
         engine = SearchEngine(None)
         keywords = engine.extract_keywords("python for data science tutorial")
